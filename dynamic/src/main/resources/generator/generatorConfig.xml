@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+  
+  <generatorConfiguration>
+  <!--<classPathEntry location="F:\mavenRepository\.m2\repository\mysql\mysql-connector-java\5.1.44\mysql-connector-java-5.1.44.jar" />-->
+    <classPathEntry location="C:\javaDV\maven_jar\mysql\mysql-connector-java\5.1.46\mysql-connector-java-5.1.46.jar" />
+  <context id="mobilecampus" targetRuntime="MyBatis3">
+
+	<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+       connectionURL="jdbc:mysql://localhost:3316/report?useSSL=false"
+			userId="root"
+			password="root" />
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+	<javaModelGenerator targetPackage="com.springcloud.example.dynamic.model" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="mapper"  targetProject="src/main/resources">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.springcloud.example.dynamic.dao"  targetProject="src/main/java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+      <table tableName="r_week_task" domainObjectName="WeekTask"></table>
+      <!--<table tableName="r_ad_frame_data" domainObjectName="AdFrame"></table>-->
+      <!--<table tableName="r_groupdevp_task" domainObjectName="GroupTaskStatis"></table>-->
+      <table tableName="r_dayliftinstall_task" domainObjectName="DayInInstall"></table>
+      <!--<table tableName="r_year_task" domainObjectName="YearTask"></table>-->
+	</context>
+</generatorConfiguration>
