@@ -32,7 +32,7 @@
       <table tableName="r_week_task" domainObjectName="WeekTask"></table>
       <!--<table tableName="r_ad_frame_data" domainObjectName="AdFrame"></table>-->
       <!--<table tableName="r_groupdevp_task" domainObjectName="GroupTaskStatis"></table>-->
-      <table tableName="r_dayliftinstall_task" domainObjectName="DayInInstall"></table>
+      <!--<table tableName="r_dayliftinstall_task" domainObjectName="DayInInstall"></table> -->
       <!--<table tableName="r_year_task" domainObjectName="YearTask"></table>-->
 	</context>
 </generatorConfiguration>

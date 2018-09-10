@@ -11,6 +11,8 @@
 
     <modules>
         <module>config-server</module>
+        <module>dynamic</module>
+        <module>common</module>
     </modules>
 
     <parent>
