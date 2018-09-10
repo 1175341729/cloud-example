@@ -6,16 +6,20 @@ import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
 import com.springcloud.example.common.message.PageMessage;
 import com.springcloud.example.common.util.RedisUtil;
+import com.springcloud.example.dynamic.message.StudentReq;
 import com.springcloud.example.dynamic.model.SaleAreas;
 import com.springcloud.example.dynamic.service.SaleAreasService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /***
@@ -55,5 +59,15 @@ public class TestController {
         List<SaleAreas> list = pageMessage.getList();
         log.info(JSON.toJSONString(list));
         return MessageUtil.success(pageMessage);
+    }
+
+    @GetMapping("/validateGet")
+    public MessageRsp validateGet(@NotBlank(message = "名称不能为空！") String name, @Min(value = 10,message = "age需大于{value}") @NotNull Integer age){
+        return MessageUtil.success(name + "--" + age);
+    }
+
+    @PostMapping("/validatePost")
+    public MessageRsp validatePost(@Valid @RequestBody(required = false) StudentReq req,BindingResult result){
+        return MessageUtil.success(JSON.toJSON(req));
     }
 }
