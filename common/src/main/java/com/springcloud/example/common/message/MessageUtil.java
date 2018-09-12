@@ -38,11 +38,10 @@ public class MessageUtil {
         return rsp;
     }
 
-    public static MessageRsp success(){
+    public static MessageRsp error(Integer code,String message){
         MessageRsp rsp = new MessageRsp();
-        CommonEnum.Message success = CommonEnum.Message.SUCCESS;
-        rsp.setCode(success.getCode());
-        rsp.setMessage(success.getMessage());
+        rsp.setCode(code);
+        rsp.setMessage(message);
         return rsp;
     }
 }

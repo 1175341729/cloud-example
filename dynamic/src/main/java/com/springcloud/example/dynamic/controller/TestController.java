@@ -47,6 +47,11 @@ public class TestController {
 
     @GetMapping("/test2")
     public MessageRsp test(@NotEmpty(message = "name不能为空！") String name) {
+        Object lock = redisUtil.get("lock");
+        if (lock != null){
+            throw new GlobalException("请勿重复操作！");
+        }
+        redisUtil.set("lock",true,60L);
         redisUtil.setHash("hash","name","邓伟");
         MessageRsp<String> success = MessageUtil.success(redisUtil.getHashByField("hash","name"));
         return success;
@@ -67,7 +72,7 @@ public class TestController {
     }
 
     @PostMapping("/validatePost")
-    public MessageRsp validatePost(@Valid @RequestBody(required = false) StudentReq req,BindingResult result){
+    public MessageRsp validatePost(@Validated @RequestBody(required = false) StudentReq req){
         return MessageUtil.success(JSON.toJSON(req));
     }
 }
