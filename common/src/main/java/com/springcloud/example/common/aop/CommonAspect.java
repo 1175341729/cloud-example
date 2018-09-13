@@ -23,16 +23,11 @@ public class CommonAspect {
     }
 
     @Around(value = "point()")
-    public Object arround(ProceedingJoinPoint joinPoint){
+    public Object arround(ProceedingJoinPoint joinPoint) throws Throwable {
         String method = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
         log.info("请求方法：{}",method);
         log.info("请求参数：{}", JSON.toJSONString(args));
-        try {
-            return joinPoint.proceed();
-        } catch (Throwable throwable) {
-            log.error("error",throwable);
-            return null;
-        }
+        return joinPoint.proceed();
     }
 }
