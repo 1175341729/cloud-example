@@ -1,6 +1,7 @@
 package com.springcloud.example.dynamic.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.springcloud.example.common.exception.GlobalException;
 import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
