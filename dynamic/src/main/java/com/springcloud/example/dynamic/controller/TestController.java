@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -75,5 +76,10 @@ public class TestController {
     @PostMapping("/validatePost")
     public MessageRsp validatePost(@Validated @RequestBody(required = false) StudentReq req){
         return MessageUtil.success(JSON.toJSON(req));
+    }
+
+    @GetMapping("/{id}")
+    public String pathValidate(@Max(2)@PathVariable Integer id){
+        return id + "";
     }
 }
