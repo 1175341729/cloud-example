@@ -5,6 +5,8 @@ import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -91,7 +93,7 @@ public class HandlerException {
         for (ConstraintViolation<?> item : violations) {
             sb.append(item.getMessage()).append("、");
         }
-        return MessageUtil.error(-1, StringUtils.removeEnd(sb.toString(), "、"));
+        return MessageUtil.error(CommonEnum.Message.PARAM_ERROR.getCode(), StringUtils.removeEnd(sb.toString(), "、"));
     }
 
     /**
@@ -100,17 +102,23 @@ public class HandlerException {
      * @param response
      * @return
      */
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class,BindException.class})
     @ResponseBody
-    public MessageRsp methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletResponse response) {
+    public MessageRsp methodArgumentNotValidException(Exception e, HttpServletResponse response) {
         log.error("error", e);
-        List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
+        BindingResult bindingResult;
+        if (e instanceof MethodArgumentNotValidException){
+            bindingResult = ((MethodArgumentNotValidException) e).getBindingResult();
+        } else {
+            bindingResult = ((BindException) e).getBindingResult();
+        }
+        List<ObjectError> allErrors = bindingResult.getAllErrors();
         StringBuilder sb = new StringBuilder();
         for (ObjectError error : allErrors) {
             String defaultMessage = error.getDefaultMessage();
             sb.append(defaultMessage).append("、");
         }
 
-        return MessageUtil.error(-1, StringUtils.removeEnd(sb.toString(), "、"));
+        return MessageUtil.error(CommonEnum.Message.PARAM_ERROR.getCode(), StringUtils.removeEnd(sb.toString(), "、"));
     }
 }
