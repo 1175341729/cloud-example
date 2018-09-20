@@ -1,12 +1,10 @@
-package com.springcloud.example.common.exception;
+package com.springcloud.example.common.advice.exception;
 
-import com.alibaba.fastjson.JSON;
 import com.springcloud.example.common.enums.CommonEnum;
 import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

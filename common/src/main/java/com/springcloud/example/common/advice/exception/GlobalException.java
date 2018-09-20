@@ -1,4 +1,4 @@
-package com.springcloud.example.common.exception;
+package com.springcloud.example.common.advice.exception;
 
 import com.springcloud.example.common.enums.CommonEnum;
 import lombok.Data;

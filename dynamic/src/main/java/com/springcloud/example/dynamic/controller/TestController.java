@@ -1,8 +1,7 @@
 package com.springcloud.example.dynamic.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
-import com.springcloud.example.common.exception.GlobalException;
+import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
 import com.springcloud.example.common.message.PageMessage;
@@ -13,15 +12,17 @@ import com.springcloud.example.dynamic.service.SaleAreasService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /***
@@ -39,47 +40,57 @@ public class TestController {
     private SaleAreasService saleAreasService;
 
     @GetMapping("/test")
-    public MessageRsp test() {
+    public Object test() {
         redisUtil.set("test", "邓伟", null);
-        MessageRsp<String> success = MessageUtil.success(redisUtil.get("test"));
+        Object test = redisUtil.get("test");
         if (true)
         throw new GlobalException("1234");
-        return success;
+        return test;
     }
 
     @GetMapping("/test2")
-    public MessageRsp test(@NotEmpty(message = "name不能为空！") String name) {
+    public Object test(@NotEmpty(message = "name不能为空！") String name) {
         Object lock = redisUtil.get("lock");
         if (lock != null){
             throw new GlobalException("请勿重复操作！");
         }
         redisUtil.set("lock",true,60L);
         redisUtil.setHash("hash","name","邓伟");
-        MessageRsp<String> success = MessageUtil.success(redisUtil.getHashByField("hash","name"));
-        return success;
+        Object rsp = redisUtil.getHashByField("hash", "name");
+        return rsp;
     }
 
     @GetMapping("/page")
-    public MessageRsp page(@RequestParam(defaultValue = "0") Integer pageNum, @RequestParam(defaultValue = "0") Integer pageSize){
+    public List<SaleAreas> page(@RequestParam(defaultValue = "0") Integer pageNum, @RequestParam(defaultValue = "0") Integer pageSize){
         PageMessage pageMessage = saleAreasService.listSaleAreas(pageNum, pageSize);
 
         List<SaleAreas> list = pageMessage.getList();
         log.info(JSON.toJSONString(list));
-        return MessageUtil.success(pageMessage);
+        return list;
     }
 
     @GetMapping("/validateGet")
-    public MessageRsp validateGet(@NotBlank(message = "名称不能为空！") String name, @Min(value = 10,message = "age需大于{value}") @NotNull Integer age){
-        return MessageUtil.success(name + "--" + age);
+    public String validateGet(@NotBlank(message = "名称不能为空！") String name, @Min(value = 10,message = "age需大于{value}") @NotNull Integer age){
+        return name + "--" + age;
     }
 
     @PostMapping("/validatePost")
-    public MessageRsp validatePost(@Validated @RequestBody(required = false) StudentReq req){
-        return MessageUtil.success(JSON.toJSON(req));
+    public StudentReq validatePost(@Validated @RequestBody(required = false) StudentReq req){
+        return req;
     }
 
     @GetMapping("/{id}")
-    public String pathValidate(@Max(2)@PathVariable Integer id){
+    public String pathValidate(@Max(2) @PathVariable Integer id){
         return id + "";
+    }
+
+    @GetMapping("/testVoid")
+    public void testVoid(HttpServletResponse response) throws IOException {
+        System.out.println("123");
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
+        PrintWriter writer = response.getWriter();
+        writer.print("1234");
+        writer.flush();
+        log.info("testVoid");
     }
 }
