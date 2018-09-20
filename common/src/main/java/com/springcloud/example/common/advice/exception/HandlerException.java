@@ -99,6 +99,8 @@ public class HandlerException {
     /**
      * 参数验证
      * @param e
+     * MethodArgumentNotValidException @RequestBody
+     * BindException 普通form表单
      * @param response
      * @return
      */
