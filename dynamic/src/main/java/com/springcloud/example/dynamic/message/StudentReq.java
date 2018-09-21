@@ -1,9 +1,11 @@
 package com.springcloud.example.dynamic.message;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
+import java.util.Date;
 
 /***
  *  @Author dengwei
@@ -16,4 +18,6 @@ public class StudentReq {
     private String name;
     @Min(value = 10,message = "需大于{value}")
     private Integer age;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date date = new Date();
 }

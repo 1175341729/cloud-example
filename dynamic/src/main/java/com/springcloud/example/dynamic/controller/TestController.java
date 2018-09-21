@@ -5,11 +5,13 @@ import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
 import com.springcloud.example.common.message.PageMessage;
+import com.springcloud.example.common.util.HttpClientUtil;
 import com.springcloud.example.common.util.RedisUtil;
 import com.springcloud.example.dynamic.message.StudentReq;
 import com.springcloud.example.dynamic.model.SaleAreas;
 import com.springcloud.example.dynamic.service.SaleAreasService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.http.MediaType;
@@ -24,7 +26,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 
 /***
@@ -107,5 +111,20 @@ public class TestController {
         // 文件写入
         file.transferTo(new File(filePath));
         return filePath;
+    }
+
+    @GetMapping("/date/getDate")
+    public Date listRedis(Date date) {
+        return date;
+    }
+
+    @GetMapping("/download")
+    public void download(HttpServletResponse response) throws Exception {
+        String url = "http://localhost:8080/api/device/exportPointSnap?supplier=a0001&scrType=2&dataTime=1537113600";
+        InputStream inputStream = HttpClientUtil.getInputStream(url);
+        IOUtils.copy(inputStream,response.getOutputStream());
+        response.setContentType("application/x-msdownload");
+        // 设置头消息
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String("供应商.xls".getBytes("gbk"), "iso-8859-1"));
     }
 }
