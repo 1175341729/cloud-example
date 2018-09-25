@@ -9,6 +9,7 @@ import com.springcloud.example.common.util.HttpClientUtil;
 import com.springcloud.example.common.util.RedisUtil;
 import com.springcloud.example.dynamic.message.StudentReq;
 import com.springcloud.example.dynamic.model.SaleAreas;
+import com.springcloud.example.dynamic.service.FileService;
 import com.springcloud.example.dynamic.service.SaleAreasService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -44,6 +45,8 @@ public class TestController {
     private RedisUtil redisUtil;
     @Resource
     private SaleAreasService saleAreasService;
+    @Resource
+    private FileService fileService;
 
     @GetMapping("/test")
     public Object test() {
@@ -126,5 +129,11 @@ public class TestController {
         response.setContentType("application/x-msdownload");
         // 设置头消息
         response.setHeader("Content-Disposition", "attachment;filename=" + new String("供应商.xls".getBytes("gbk"), "iso-8859-1"));
+    }
+
+    @PostMapping("/fileUpload")
+    public String fileUpload(MultipartFile file, @NotBlank(message = "文件模块不能为空！") String model) throws IOException {
+        String filePath = fileService.uploadFile(file,model);
+        return filePath;
     }
 }
