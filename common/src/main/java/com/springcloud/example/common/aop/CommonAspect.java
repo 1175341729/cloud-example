@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /***
  *  @Author dengwei
- *  @Description: TODO
+ *  @Description: 记录日志切面
  *  @Date 2018/9/13 13:35
  */
 @Aspect

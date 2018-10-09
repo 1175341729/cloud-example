@@ -2,6 +2,7 @@ package com.springcloud.example.dynamic.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.springcloud.example.common.advice.exception.GlobalException;
+import com.springcloud.example.common.annotation.AccessLimit;
 import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
 import com.springcloud.example.common.message.PageMessage;
@@ -89,6 +90,7 @@ public class TestController {
     }
 
     @GetMapping("/{id}")
+    @AccessLimit
     public String pathValidate(@Max(2) @PathVariable Integer id) {
         return id + "";
     }
