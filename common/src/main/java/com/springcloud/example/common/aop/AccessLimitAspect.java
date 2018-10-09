@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
 public class AccessLimitAspect {
     private RateLimiter rateLimiter = RateLimiter.create(10);
 
+    /**
+     * 基于注解
+     */
     @Pointcut("@annotation(com.springcloud.example.common.annotation.AccessLimit)")
     public void point(){
 
