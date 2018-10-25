@@ -57,11 +57,13 @@ pagehelper:
 eureka:
   instance:
     prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
   client:
     service-url:
       defaultZone: http://eureka.didispace.com/eureka/
-    register-with-eureka: false
-    fetch-registry: false
+    register-with-eureka: true
+    fetch-registry: true
+
 
 info:
   name: @project.name@
