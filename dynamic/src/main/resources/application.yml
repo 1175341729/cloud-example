@@ -11,6 +11,9 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
+    multipart:
+      max-request-size: 100Mb
+      max-file-size: 100Mb
   datasource:
       driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://localhost:3316/report?useUnicode=true&characterEncoding=utf8&useSSL=false

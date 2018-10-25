@@ -21,8 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -139,5 +141,18 @@ public class TestController {
     public String fileUpload(MultipartFile file, @NotBlank(message = "文件模块不能为空！") String model) throws IOException {
         String filePath = fileService.uploadFile(file,model);
         return filePath;
+    }
+
+    @PostMapping("/branchFileUpload")
+    public String branchFileUpload(HttpServletRequest request,String[] numbers){
+        MultipartHttpServletRequest mhr = (MultipartHttpServletRequest) request;
+        for(String number : numbers){
+            MultipartFile file = mhr.getFile("file_" + number);
+            if (file != null && !file.isEmpty()){
+                String originalFilename = file.getOriginalFilename();
+                log.info(number + "_" + originalFilename);
+            }
+        }
+        return "SUCCESS";
     }
 }
