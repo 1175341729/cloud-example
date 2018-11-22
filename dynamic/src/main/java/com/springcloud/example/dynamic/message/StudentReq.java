@@ -18,6 +18,5 @@ public class StudentReq {
     private String name;
     @Min(value = 10,message = "需大于{value}")
     private Integer age;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date = new Date();
 }
