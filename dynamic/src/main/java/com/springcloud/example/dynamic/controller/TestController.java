@@ -155,4 +155,9 @@ public class TestController {
         }
         return "SUCCESS";
     }
+
+    @GetMapping("/student")
+    public StudentReq student(){
+        return new StudentReq();
+    }
 }
