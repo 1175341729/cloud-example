@@ -12,6 +12,7 @@ import com.springcloud.example.common.util.RedisUtil;
 import com.springcloud.example.dynamic.message.StudentReq;
 import com.springcloud.example.dynamic.model.SaleAreas;
 import com.springcloud.example.dynamic.service.FileService;
+import com.springcloud.example.dynamic.service.RetryService;
 import com.springcloud.example.dynamic.service.SaleAreasService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -51,6 +52,8 @@ public class TestController {
     private SaleAreasService saleAreasService;
     @Resource
     private FileService fileService;
+    @Resource
+    private RetryService retryService;
 
     @GetMapping("/test")
     public Object test() {
@@ -159,5 +162,11 @@ public class TestController {
     @GetMapping("/student")
     public StudentReq student(){
         return new StudentReq();
+    }
+
+    @GetMapping("/retry")
+    public String retry(){
+        String retry = retryService.retry();
+        return retry;
     }
 }
