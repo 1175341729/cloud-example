@@ -43,6 +43,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     call-setters-on-nulls: true
+  type-aliases-package: com.springcloud.example.dynamic.model
 
 mapper:
   not-empty: true

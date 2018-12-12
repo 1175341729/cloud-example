@@ -9,8 +9,12 @@ import com.springcloud.example.common.message.MessageUtil;
 import com.springcloud.example.common.message.PageMessage;
 import com.springcloud.example.common.util.HttpClientUtil;
 import com.springcloud.example.common.util.RedisUtil;
+import com.springcloud.example.dynamic.dao.SaleAreasMapper;
+import com.springcloud.example.dynamic.dao.UserMapper;
 import com.springcloud.example.dynamic.message.StudentReq;
 import com.springcloud.example.dynamic.model.SaleAreas;
+import com.springcloud.example.dynamic.model.SaleAreasExample;
+import com.springcloud.example.dynamic.model.User;
 import com.springcloud.example.dynamic.service.FileService;
 import com.springcloud.example.dynamic.service.RetryService;
 import com.springcloud.example.dynamic.service.SaleAreasService;
@@ -19,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,6 +59,10 @@ public class TestController {
     private FileService fileService;
     @Resource
     private RetryService retryService;
+    @Resource
+    private UserMapper userMapper;
+    @Resource
+    private SaleAreasMapper saleAreasMapper;
 
     @GetMapping("/test")
     public Object test() {
@@ -168,5 +177,21 @@ public class TestController {
     public String retry(){
         String retry = retryService.retry();
         return retry;
+    }
+
+    @Transactional
+    @GetMapping("/saveUser")
+    public int saveUser(){
+        /*User user = new User();
+        user.setName("邓伟");
+        user.setAge(27);
+        int insert = userMapper.insert(user);
+        return insert;*/
+        int number = saleAreasMapper.countByExample(new SaleAreasExample());
+        log.info("删除前：{}",number);
+        saleAreasMapper.deleteByPrimaryKey("900000");
+        number = saleAreasMapper.countByExample(new SaleAreasExample());
+        log.info("删除前：{}",number);
+        throw new RuntimeException("123");
     }
 }
