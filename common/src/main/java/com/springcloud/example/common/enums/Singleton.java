@@ -30,7 +30,7 @@ public enum Singleton {
     Singleton(){
         calendarUtil = new CalendarUtil();
         cache = CacheBuilder.newBuilder()
-                .expireAfterAccess(60, TimeUnit.SECONDS)
+                .expireAfterWrite(10, TimeUnit.SECONDS)
                 .build();
     }
     public CalendarUtil getInstance(){
@@ -55,6 +55,7 @@ public enum Singleton {
     }
 
     private List<String> creteCacheData() {
+        log.info("时间：{}",System.currentTimeMillis() / 1000);
         log.info("创建！");
         return Lists.newArrayList("1","2","3");
     }
