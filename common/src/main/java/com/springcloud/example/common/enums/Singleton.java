@@ -1,5 +1,8 @@
 package com.springcloud.example.common.enums;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 import com.springcloud.example.common.util.CalendarUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /***
  *  @Author dengwei
@@ -20,9 +25,13 @@ import java.util.List;
 public enum Singleton {
     INSTANCE;
     private CalendarUtil calendarUtil;
+    private Cache<String,List<String>> cache;
     private List<String> codes = new ArrayList<>();
     Singleton(){
         calendarUtil = new CalendarUtil();
+        cache = CacheBuilder.newBuilder()
+                .expireAfterAccess(60, TimeUnit.SECONDS)
+                .build();
     }
     public CalendarUtil getInstance(){
         return calendarUtil;
@@ -30,5 +39,14 @@ public enum Singleton {
 
     public void setCodes(List<String> codes) {
         this.codes = codes;
+    }
+
+    public List<String> get(String key) throws ExecutionException {
+        return cache.get(key, this::creteCacheData);
+    }
+
+    private List<String> creteCacheData() {
+        log.info("创建！");
+        return Lists.newArrayList("1","2","3");
     }
 }

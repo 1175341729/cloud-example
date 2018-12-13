@@ -1,9 +1,11 @@
 package com.springcloud.example.dynamic.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.common.annotation.AccessLimit;
 import com.springcloud.example.common.annotation.Log;
+import com.springcloud.example.common.enums.Singleton;
 import com.springcloud.example.common.message.MessageRsp;
 import com.springcloud.example.common.message.MessageUtil;
 import com.springcloud.example.common.message.PageMessage;
@@ -41,6 +43,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /***
  *  @Author dengwei
@@ -193,5 +196,10 @@ public class TestController {
         number = saleAreasMapper.countByExample(new SaleAreasExample());
         log.info("删除前：{}",number);
         throw new RuntimeException("123");
+    }
+
+    @GetMapping("/cache/{key}")
+    public List<String> cacheGet(@PathVariable String key) throws ExecutionException {
+        return Singleton.INSTANCE.get(key);
     }
 }
