@@ -41,6 +41,15 @@ public enum Singleton {
         this.codes = codes;
     }
 
+    /**
+     * guava 缓存
+     * 说明 get方法 Callable 方法会去验证缓存中是否存在
+     * 如果存在直接返回
+     * 不存在执行加缓存操作
+     * @param key
+     * @return
+     * @throws ExecutionException
+     */
     public List<String> get(String key) throws ExecutionException {
         return cache.get(key, this::creteCacheData);
     }
