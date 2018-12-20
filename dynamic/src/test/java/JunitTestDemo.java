@@ -1,6 +1,7 @@
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import com.springcloud.example.common.enums.Singleton;
 import com.springcloud.example.common.util.ExcelUtil;
 import com.springcloud.example.dynamic.model.User;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,5 +32,13 @@ public class JunitTestDemo {
         titleMap.put("年龄","age");
         List<User> users = ExcelUtil.importExcel(fis, titleMap, User.class);
         log.info(JSON.toJSONString(users));
+    }
+
+    @Test
+    public void test2() throws InterruptedException {
+        Date date1 = Singleton.INSTANCE.date;
+        Thread.sleep(5000L);
+        Date date2 = Singleton.INSTANCE.date;
+        log.info("singleton：{}",date1 == date2);
     }
 }

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,7 @@ public enum Singleton {
     private CalendarUtil calendarUtil;
     private Cache<String,List<String>> cache;
     private List<String> codes = new ArrayList<>();
+    public Date date = new Date();
     Singleton(){
         calendarUtil = new CalendarUtil();
         cache = CacheBuilder.newBuilder()
