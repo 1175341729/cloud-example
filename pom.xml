@@ -62,7 +62,7 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-        <!-- 集成mybatis 不要使用1.0.0以下版本 -->
+        <!-- 集成mybatis 不要使用1.0.0以下版本 默认集成了jdbc -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>

@@ -34,6 +34,7 @@
       <!--<table tableName="r_groupdevp_task" domainObjectName="GroupTaskStatis"></table>-->
       <!--<table tableName="r_dayliftinstall_task" domainObjectName="DayInInstall"></table> -->
       <!--<table tableName="r_year_task" domainObjectName="YearTask"></table>-->
-      <table tableName="t_file" domainObjectName="FileEntity"></table>
+      <!--<table tableName="t_file" domainObjectName="FileEntity"></table>-->
+      <table tableName="task" domainObjectName="Task"></table>
 	</context>
 </generatorConfiguration>
