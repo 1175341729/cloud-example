@@ -49,6 +49,21 @@ import java.util.concurrent.ExecutionException;
  *  @Author dengwei
  *  @Description: 测试
  *  @Date 2018/9/7 14:58
+ *
+ *  @Bean
+        public Validator validator() {
+            ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
+            .configure()
+            .failFast(true)
+            .buildValidatorFactory();
+            return validatorFactory.getValidator();
+        }
+
+        1、普通模式（默认是这个模式）
+        　　普通模式(会校验完所有的属性，然后返回所有的验证失败信息)
+
+        2、快速失败返回模式
+        　　快速失败返回模式(只要有一个验证失败，则返回)
  */
 @RestController
 @Validated
