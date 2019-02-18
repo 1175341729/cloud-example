@@ -1,6 +1,7 @@
 package com.springcloud.example.dynamic.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.baidu.fsg.uid.UidGenerator;
 import com.google.common.collect.Lists;
 import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.common.annotation.AccessLimit;
@@ -216,5 +217,14 @@ public class TestController {
     @GetMapping("/cache/{key}")
     public List<String> cacheGet(@PathVariable String key) throws ExecutionException {
         return Singleton.INSTANCE.get(key);
+    }
+
+    @Resource
+    private UidGenerator cachedUidGenerator;
+
+    @GetMapping("/uid")
+    public String uuid(){
+        long uid = cachedUidGenerator.getUID();
+        return uid + "";
     }
 }

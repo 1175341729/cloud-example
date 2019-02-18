@@ -1,2 +1,4 @@
 /*.iml
 /.idea
+/uuid/*.iml
+/uuid/target

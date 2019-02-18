@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("com.springcloud.example.dynamic.dao")
-@ComponentScan("com.springcloud.example")
+@MapperScan(basePackages = {"com.springcloud.example.dynamic.dao","com.baidu.fsg.uid.worker.dao"})
+@ComponentScan(basePackages = {"com.springcloud.example","com.baidu.fsg.uid"})
 @EnableRetry
 public class DynamicApplication {
 

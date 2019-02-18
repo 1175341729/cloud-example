@@ -13,6 +13,7 @@
         <module>common</module>
         <module>dynamic</module>
         <module>config-server</module>
+        <module>uuid</module>
     </modules>
 
     <parent>
