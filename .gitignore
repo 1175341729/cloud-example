@@ -2,3 +2,5 @@
 /.idea
 /uuid/*.iml
 /uuid/target
+/oauth2/.mvn
+/oauth2/*.iml
