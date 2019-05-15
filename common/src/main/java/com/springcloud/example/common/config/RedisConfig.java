@@ -16,7 +16,6 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-<<<<<<< .mine
 import javax.annotation.Resource;
 
 /***
@@ -68,7 +67,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.afterPropertiesSet();
         return template;
     }
-<<<<<<< .mine
 
     /**
      * list类型
@@ -79,32 +77,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public ListOperations listOperations(RedisTemplate redisTemplate) {
 	    return redisTemplate.opsForList();
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-
-    /**
-     * list类型
-     *
-     * @param redisTemplate
-     * @return
-     */
-    @Bean
-    public ListOperations listOperations(RedisTemplate redisTemplate) {
-        ListOperations listOperations = redisTemplate.opsForList();
-        return listOperations;
     }
 
     /**
@@ -118,5 +90,4 @@ public class RedisConfig extends CachingConfigurerSupport {
         ValueOperations valueOperations = redisTemplate.opsForValue();
         return valueOperations;
     }
->>>>>>> .theirs
 }
