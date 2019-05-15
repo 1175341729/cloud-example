@@ -12,15 +12,25 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+<<<<<<< .mine
 import javax.annotation.Resource;
 
 /***
  *  @Author dengwei
  *  @Description: redis序列化
  *  @Date 2019/2/21 11:05
+=======
+/***
+ *  @Author dengwei
+ *  @Description: redis序列化
+ *  @Date 2019/2/21 11:05
+
+
+>>>>>>> .theirs
  */
 @Configuration
 @EnableCaching
@@ -58,6 +68,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.afterPropertiesSet();
         return template;
     }
+<<<<<<< .mine
 
     /**
      * list类型
@@ -69,4 +80,43 @@ public class RedisConfig extends CachingConfigurerSupport {
     public ListOperations listOperations(RedisTemplate redisTemplate) {
 	    return redisTemplate.opsForList();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
+
+    /**
+     * list类型
+     *
+     * @param redisTemplate
+     * @return
+     */
+    @Bean
+    public ListOperations listOperations(RedisTemplate redisTemplate) {
+        ListOperations listOperations = redisTemplate.opsForList();
+        return listOperations;
+    }
+
+    /**
+     * list类型
+     *
+     * @param redisTemplate
+     * @return
+     */
+    @Bean
+    public ValueOperations valueOperations(RedisTemplate redisTemplate) {
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        return valueOperations;
+    }
+>>>>>>> .theirs
 }
