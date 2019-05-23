@@ -6,6 +6,7 @@ import com.springcloud.example.oauth2.jwt.MyUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.annotation.Resource;
+
 
 /**
  * SpringSecurity的配置
@@ -27,8 +30,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled=true)
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    // @Autowired
-    //private UmsAdminService adminService;
+    @Resource
+    private RedisTemplate redisTemplate;
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf()// 由于使用的是JWT，我们这里不需要csrf
@@ -82,6 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() {
         //获取登录用户信息
         return username -> {
+            redisTemplate.opsForValue().set("dengwei","cache");
             String password = passwordEncoder().encode("dengwei");
             log.info("password:{}",password);
             return new MyUserDetails("dengwei",password, Lists.newArrayList("add","update"));

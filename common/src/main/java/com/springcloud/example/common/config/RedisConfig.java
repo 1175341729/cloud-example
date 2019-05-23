@@ -22,14 +22,6 @@ import javax.annotation.Resource;
  *  @Author dengwei
  *  @Description: redis序列化
  *  @Date 2019/2/21 11:05
-=======
-/***
- *  @Author dengwei
- *  @Description: redis序列化
- *  @Date 2019/2/21 11:05
-
-
->>>>>>> .theirs
  */
 @Configuration
 @EnableCaching

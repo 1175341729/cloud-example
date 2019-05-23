@@ -1,14 +1,13 @@
 package com.springcloud.example.dynamic.controller;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.fsg.uid.UidGenerator;
-import com.google.common.collect.Lists;
 import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.common.annotation.AccessLimit;
 import com.springcloud.example.common.annotation.Log;
 import com.springcloud.example.common.enums.Singleton;
-import com.springcloud.example.common.message.MessageRsp;
-import com.springcloud.example.common.message.MessageUtil;
 import com.springcloud.example.common.message.PageMessage;
 import com.springcloud.example.common.util.HttpClientUtil;
 import com.springcloud.example.common.util.RedisUtil;
@@ -17,7 +16,6 @@ import com.springcloud.example.dynamic.dao.UserMapper;
 import com.springcloud.example.dynamic.message.StudentReq;
 import com.springcloud.example.dynamic.model.SaleAreas;
 import com.springcloud.example.dynamic.model.SaleAreasExample;
-import com.springcloud.example.dynamic.model.User;
 import com.springcloud.example.dynamic.service.FileService;
 import com.springcloud.example.dynamic.service.RetryService;
 import com.springcloud.example.dynamic.service.SaleAreasService;
@@ -25,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -82,6 +81,8 @@ public class TestController {
     private UserMapper userMapper;
     @Resource
     private SaleAreasMapper saleAreasMapper;
+    @Resource
+    private ListOperations listOperations;
 
     @GetMapping("/test")
     public Object test() {
@@ -192,10 +193,13 @@ public class TestController {
         return new StudentReq();
     }
 
-    @GetMapping("/retry")
-    public String retry(){
-        String retry = retryService.retry();
-        return retry;
+    @PostMapping("/retry")
+    public String retry(@RequestBody JSONObject param){
+        new Thread(() -> {
+            param.put("uuid", IdUtil.simpleUUID());
+            String retry = retryService.retry(param);
+        }).start();
+        return "OK";
     }
 
     @Transactional
@@ -226,5 +230,14 @@ public class TestController {
     public String uuid(){
         long uid = cachedUidGenerator.getUID();
         return uid + "";
+    }
+
+    @GetMapping("/list")
+    public String list(String value){
+        listOperations.leftPush("queue",value);
+
+//        Object v = listOperations.leftPop("queue");
+//        log.info("{}", v);
+        return "OK";
     }
 }

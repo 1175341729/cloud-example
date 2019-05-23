@@ -1,6 +1,7 @@
 package com.springcloud.example.oauth2.controller;
 
 import com.springcloud.example.oauth2.jwt.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,6 +46,9 @@ public class TestController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             token = jwtTokenUtil.generateToken("dengwei");
+
+            Claims claimsFromToken = jwtTokenUtil.getClaimsFromToken(token);
+            log.info("{}",claimsFromToken);
         } catch (AuthenticationException e) {
             log.error("error",e);
             e.printStackTrace();
