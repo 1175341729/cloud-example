@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 
 @Service
 @Slf4j
-public class RedisQueue implements CommandLineRunner{
+public class RedisSimpleQueue implements CommandLineRunner{
     @Resource
     private ListOperations listOperations;
 
