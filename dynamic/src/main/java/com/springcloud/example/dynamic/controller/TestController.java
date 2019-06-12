@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baidu.fsg.uid.UidGenerator;
 import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.common.annotation.AccessLimit;
+import com.springcloud.example.common.annotation.Lock;
 import com.springcloud.example.common.annotation.Log;
 import com.springcloud.example.common.enums.Singleton;
 import com.springcloud.example.common.message.PageMessage;
@@ -24,12 +25,15 @@ import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import redis.clients.jedis.JedisCommands;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +47,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /***
@@ -50,20 +55,19 @@ import java.util.concurrent.ExecutionException;
  *  @Description: 测试
  *  @Date 2018/9/7 14:58
  *
- *  @Bean
-        public Validator validator() {
-            ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
-            .configure()
-            .failFast(true)
-            .buildValidatorFactory();
-            return validatorFactory.getValidator();
-        }
+ *  @Bean public Validator validator() {
+ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
+.configure()
+.failFast(true)
+.buildValidatorFactory();
+return validatorFactory.getValidator();
+}
 
-        1、普通模式（默认是这个模式）
-        　　普通模式(会校验完所有的属性，然后返回所有的验证失败信息)
+1、普通模式（默认是这个模式）
+　　普通模式(会校验完所有的属性，然后返回所有的验证失败信息)
 
-        2、快速失败返回模式
-        　　快速失败返回模式(只要有一个验证失败，则返回)
+2、快速失败返回模式
+　　快速失败返回模式(只要有一个验证失败，则返回)
  */
 @RestController
 @Validated
@@ -83,6 +87,8 @@ public class TestController {
     private SaleAreasMapper saleAreasMapper;
     @Resource
     private ListOperations listOperations;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/test")
     public Object test() {
@@ -140,7 +146,7 @@ public class TestController {
     }
 
     @GetMapping("/id/{id}")
-    @Log(model = "测试模块",action = "搜索")
+    @Log(model = "测试模块", action = "搜索")
     public Integer pathValidateInteger(@Max(2) @PathVariable Integer id) {
         return id;
     }
@@ -163,7 +169,7 @@ public class TestController {
     public void download(HttpServletResponse response) throws Exception {
         String url = "http://localhost:8080/api/device/exportPointSnap?supplier=a0001&scrType=2&dataTime=1537113600";
         InputStream inputStream = HttpClientUtil.getInputStream(url);
-        IOUtils.copy(inputStream,response.getOutputStream());
+        IOUtils.copy(inputStream, response.getOutputStream());
         response.setContentType("application/x-msdownload");
         // 设置头消息
         response.setHeader("Content-Disposition", "attachment;filename=" + new String("供应商.xls".getBytes("gbk"), "iso-8859-1"));
@@ -171,16 +177,16 @@ public class TestController {
 
     @PostMapping("/fileUpload")
     public String fileUpload(MultipartFile file, @NotBlank(message = "文件模块不能为空！") String model) throws IOException {
-        String filePath = fileService.uploadFile(file,model);
+        String filePath = fileService.uploadFile(file, model);
         return filePath;
     }
 
     @PostMapping("/branchFileUpload")
-    public String branchFileUpload(HttpServletRequest request,String[] numbers){
+    public String branchFileUpload(HttpServletRequest request, String[] numbers) {
         MultipartHttpServletRequest mhr = (MultipartHttpServletRequest) request;
-        for(String number : numbers){
+        for (String number : numbers) {
             MultipartFile file = mhr.getFile("file_" + number);
-            if (file != null && !file.isEmpty()){
+            if (file != null && !file.isEmpty()) {
                 String originalFilename = file.getOriginalFilename();
                 log.info(number + "_" + originalFilename);
             }
@@ -189,12 +195,12 @@ public class TestController {
     }
 
     @GetMapping("/student")
-    public StudentReq student(){
+    public StudentReq student() {
         return new StudentReq();
     }
 
     @PostMapping("/retry")
-    public String retry(@RequestBody JSONObject param){
+    public String retry(@RequestBody JSONObject param) {
         new Thread(() -> {
             param.put("uuid", IdUtil.simpleUUID());
             String retry = retryService.retry(param);
@@ -204,17 +210,17 @@ public class TestController {
 
     @Transactional
     @GetMapping("/saveUser")
-    public int saveUser(){
+    public int saveUser() {
         /*User user = new User();
         user.setName("邓伟");
         user.setAge(27);
         int insert = userMapper.insert(user);
         return insert;*/
         int number = saleAreasMapper.countByExample(new SaleAreasExample());
-        log.info("删除前：{}",number);
+        log.info("删除前：{}", number);
         saleAreasMapper.deleteByPrimaryKey("900000");
         number = saleAreasMapper.countByExample(new SaleAreasExample());
-        log.info("删除前：{}",number);
+        log.info("删除前：{}", number);
         throw new RuntimeException("123");
     }
 
@@ -227,17 +233,23 @@ public class TestController {
     private UidGenerator cachedUidGenerator;
 
     @GetMapping("/uid")
-    public String uuid(){
+    public String uuid() {
         long uid = cachedUidGenerator.getUID();
         return uid + "";
     }
 
     @GetMapping("/list")
-    public String list(String value){
-        listOperations.leftPush("queue",value);
+    public String list(String value) {
+        listOperations.leftPush("queue", value);
 
 //        Object v = listOperations.leftPop("queue");
 //        log.info("{}", v);
+        return "OK";
+    }
+
+    @PostMapping("/lock")
+    @Lock(requestId = "id",expiration = 30)
+    public String lock(@RequestBody Map<String,Object> param) {
         return "OK";
     }
 }
