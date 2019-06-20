@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -26,16 +28,19 @@ import java.util.concurrent.TimeUnit;
 public enum Singleton {
     INSTANCE;
     private CalendarUtil calendarUtil;
-    private Cache<String,List<String>> cache;
+    private Cache<String, List<String>> cache;
     private List<String> codes = new ArrayList<>();
     public Date date = new Date();
-    Singleton(){
+    BlockingQueue<String> queue = new ArrayBlockingQueue<>(50);
+
+    Singleton() {
         calendarUtil = new CalendarUtil();
         cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(10, TimeUnit.SECONDS)
                 .build();
     }
-    public CalendarUtil getInstance(){
+
+    public CalendarUtil getInstance() {
         return calendarUtil;
     }
 
@@ -48,6 +53,7 @@ public enum Singleton {
      * 说明 get方法 Callable 方法会去验证缓存中是否存在
      * 如果存在直接返回
      * 不存在执行加缓存操作
+     *
      * @param key
      * @return
      * @throws ExecutionException
@@ -57,8 +63,12 @@ public enum Singleton {
     }
 
     private List<String> creteCacheData() {
-        log.info("时间：{}",System.currentTimeMillis() / 1000);
+        log.info("时间：{}", System.currentTimeMillis() / 1000);
         log.info("创建！");
-        return Lists.newArrayList("1","2","3");
+        return Lists.newArrayList("1", "2", "3");
+    }
+
+    public BlockingQueue<String> getQueue() {
+        return queue;
     }
 }

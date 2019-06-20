@@ -15,6 +15,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import javax.annotation.Resource;
 
@@ -80,6 +82,9 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public ValueOperations valueOperations(RedisTemplate redisTemplate) {
         ValueOperations valueOperations = redisTemplate.opsForValue();
+
+        JedisPoolConfig config = new JedisPoolConfig();
+        // JedisPool jedisPool = new JedisPool(config, host, port, timeout, password,index);
         return valueOperations;
     }
 }

@@ -48,6 +48,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 
 /***
@@ -251,5 +252,29 @@ public class TestController {
     @Lock(requestId = "id",expiration = 30)
     public String lock(@RequestBody Map<String,Object> param) {
         return "OK";
+    }
+
+    @GetMapping("/take")
+    public String take() {
+        new Thread(() -> {
+            while (true) {
+                BlockingQueue<String> queue = Singleton.INSTANCE.getQueue();
+                String take;
+                try {
+                    take = queue.take();
+                    log.info("{}",take);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        return "TAKE";
+    }
+
+    @GetMapping("/put")
+    public String put(String str) throws InterruptedException {
+        BlockingQueue<String> queue = Singleton.INSTANCE.getQueue();
+        queue.put(str);
+        return "PUT";
     }
 }
