@@ -7,6 +7,7 @@ import com.springcloud.example.dynamic.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -40,5 +41,17 @@ public class JunitTestDemo {
         Thread.sleep(5000L);
         Date date2 = Singleton.INSTANCE.date;
         log.info("singleton：{}",date1 == date2);
+    }
+
+    @Test
+    public void encryptor(){
+        BasicTextEncryptor basicTextEncryptor = new BasicTextEncryptor();
+        //加密所需的salt(盐)
+        basicTextEncryptor.setPassword("dengwei");
+        //要加密的数据（数据库的用户名或密码）
+        String username = basicTextEncryptor.encrypt("root");
+        String password = basicTextEncryptor.encrypt("root");
+        System.out.println("username:"+username);
+        System.out.println("password:"+password);
     }
 }

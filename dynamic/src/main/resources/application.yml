@@ -17,8 +17,8 @@ spring:
   datasource:
       driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://localhost:3316/report?useUnicode=true&characterEncoding=utf8&useSSL=false
-      username: root
-      password: root
+      username: ENC(S7yMVFOCoAmoluDiWnGedg==)
+      password: ENC(38rsNOiuYCHl2iNqlLgZ6A==)
       type: com.zaxxer.hikari.HikariDataSource
   redis:
       host: 127.0.0.1
@@ -39,7 +39,7 @@ spring:
     serialization: true
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml,classpath:META-INF/mybatis/mapper/WORKER_NODE.xml
+  mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
     call-setters-on-nulls: true
@@ -73,3 +73,8 @@ eureka:
 info:
   name: @project.name@
   description: @project.description@
+
+# 盐值
+jasypt:
+  encryptor:
+    password: dengwei

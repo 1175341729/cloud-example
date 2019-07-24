@@ -3,7 +3,6 @@ package com.springcloud.example.dynamic.controller;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baidu.fsg.uid.UidGenerator;
 import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.common.annotation.AccessLimit;
 import com.springcloud.example.common.annotation.Lock;
@@ -25,7 +24,6 @@ import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +31,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import redis.clients.jedis.JedisCommands;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -230,14 +227,14 @@ public class TestController {
         return Singleton.INSTANCE.get(key);
     }
 
-    @Resource
-    private UidGenerator cachedUidGenerator;
-
-    @GetMapping("/uid")
-    public String uuid() {
-        long uid = cachedUidGenerator.getUID();
-        return uid + "";
-    }
+//    @Resource
+//    private UidGenerator cachedUidGenerator;
+//
+//    @GetMapping("/uid")
+//    public String uuid() {
+//        long uid = cachedUidGenerator.getUID();
+//        return uid + "";
+//    }
 
     @GetMapping("/list")
     public String list(String value) {
@@ -254,6 +251,10 @@ public class TestController {
         return "OK";
     }
 
+    /**
+     * JAVA 队列取值
+     * @return
+     */
     @GetMapping("/take")
     public String take() {
         new Thread(() -> {
@@ -271,6 +272,12 @@ public class TestController {
         return "TAKE";
     }
 
+    /**
+     * JAVA 队列设值
+     * @param str
+     * @return
+     * @throws InterruptedException
+     */
     @GetMapping("/put")
     public String put(String str) throws InterruptedException {
         BlockingQueue<String> queue = Singleton.INSTANCE.getQueue();

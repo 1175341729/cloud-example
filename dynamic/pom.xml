@@ -23,16 +23,21 @@
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>com.springCloud.example</groupId>
-			<artifactId>uuid</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.springCloud.example</groupId>-->
+			<!--<artifactId>uuid</artifactId>-->
+			<!--<version>1.0-SNAPSHOT</version>-->
+		<!--</dependency>-->
 		<!-- 第三方JAVA工具类库 -->
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
 			<version>4.5.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 	</dependencies>
 
@@ -47,6 +52,23 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<!--跳过测试代码-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.18.1</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
 			</plugin>
 
 			<!-- maven generator自动生成插件 -->

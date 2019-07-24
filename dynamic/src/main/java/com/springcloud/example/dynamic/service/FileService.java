@@ -1,6 +1,5 @@
 package com.springcloud.example.dynamic.service;
 
-import com.springcloud.example.common.advice.exception.GlobalException;
 import com.springcloud.example.dynamic.dao.FileEntityMapper;
 import com.springcloud.example.dynamic.model.FileEntity;
 import org.springframework.stereotype.Service;

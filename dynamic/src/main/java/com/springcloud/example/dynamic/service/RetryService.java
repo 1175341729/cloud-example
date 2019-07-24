@@ -1,11 +1,9 @@
 package com.springcloud.example.dynamic.service;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSONObject;
 import com.springcloud.example.common.advice.exception.GlobalException;
-import jdk.nashorn.internal.objects.Global;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;

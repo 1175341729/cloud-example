@@ -11,9 +11,9 @@
 
     <modules>
         <module>common</module>
+        <!--<module>uuid</module>-->
         <module>dynamic</module>
         <module>config-server</module>
-        <module>uuid</module>
         <module>oauth2</module>
     </modules>
     <parent>
